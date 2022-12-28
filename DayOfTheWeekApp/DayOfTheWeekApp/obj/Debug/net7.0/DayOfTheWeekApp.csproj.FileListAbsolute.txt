@@ -1,0 +1,15 @@
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\bin\Debug\net7.0\DayOfTheWeekApp.exe
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\bin\Debug\net7.0\DayOfTheWeekApp.deps.json
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\bin\Debug\net7.0\DayOfTheWeekApp.runtimeconfig.json
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\bin\Debug\net7.0\DayOfTheWeekApp.dll
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\bin\Debug\net7.0\DayOfTheWeekApp.pdb
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\obj\Debug\net7.0\DayOfTheWeekApp.csproj.AssemblyReference.cache
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\obj\Debug\net7.0\DayOfTheWeekApp.GeneratedMSBuildEditorConfig.editorconfig
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\obj\Debug\net7.0\DayOfTheWeekApp.AssemblyInfoInputs.cache
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\obj\Debug\net7.0\DayOfTheWeekApp.AssemblyInfo.cs
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\obj\Debug\net7.0\DayOfTheWeekApp.csproj.CoreCompileInputs.cache
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\obj\Debug\net7.0\DayOfTheWeekApp.dll
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\obj\Debug\net7.0\refint\DayOfTheWeekApp.dll
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\obj\Debug\net7.0\DayOfTheWeekApp.pdb
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\obj\Debug\net7.0\DayOfTheWeekApp.genruntimeconfig.cache
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\obj\Debug\net7.0\ref\DayOfTheWeekApp.dll
