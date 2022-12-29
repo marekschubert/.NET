@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net7.0": {}
+    "net7.0": {
+      "DayOfTheWeekApp.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "compile": {
+          "bin/placeholder/DayOfTheWeekApp.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DayOfTheWeekApp.Core.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "DayOfTheWeekApp.Core/1.0.0": {
+      "type": "project",
+      "path": "../DayOfTheWeekApp.Core/DayOfTheWeekApp.Core.csproj",
+      "msbuildProject": "../DayOfTheWeekApp.Core/DayOfTheWeekApp.Core.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net7.0": []
+    "net7.0": [
+      "DayOfTheWeekApp.Core >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\mschu\\.nuget\\packages\\": {},
@@ -39,7 +58,11 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "E:\\.NET\\DayOfTheWeekApp\\DayOfTheWeekApp.Core\\DayOfTheWeekApp.Core.csproj": {
+              "projectPath": "E:\\.NET\\DayOfTheWeekApp\\DayOfTheWeekApp.Core\\DayOfTheWeekApp.Core.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

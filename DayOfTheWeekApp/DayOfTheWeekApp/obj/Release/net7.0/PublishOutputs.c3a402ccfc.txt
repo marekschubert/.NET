@@ -1,0 +1,7 @@
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\bin\Release\net7.0\publish\DayOfTheWeekApp.exe
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\bin\Release\net7.0\publish\DayOfTheWeekApp.dll
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\bin\Release\net7.0\publish\DayOfTheWeekApp.deps.json
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\bin\Release\net7.0\publish\DayOfTheWeekApp.runtimeconfig.json
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\bin\Release\net7.0\publish\DayOfTheWeekApp.pdb
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\bin\Release\net7.0\publish\DayOfTheWeekApp.Core.dll
+E:\.NET\DayOfTheWeekApp\DayOfTheWeekApp\bin\Release\net7.0\publish\DayOfTheWeekApp.Core.pdb

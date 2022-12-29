@@ -1,0 +1,12 @@
+E:\.NET\Debtor\Debtor.Core\bin\Debug\net7.0\Debtor.Core.deps.json
+E:\.NET\Debtor\Debtor.Core\bin\Debug\net7.0\Debtor.Core.dll
+E:\.NET\Debtor\Debtor.Core\bin\Debug\net7.0\Debtor.Core.pdb
+E:\.NET\Debtor\Debtor.Core\obj\Debug\net7.0\Debtor.Core.csproj.AssemblyReference.cache
+E:\.NET\Debtor\Debtor.Core\obj\Debug\net7.0\Debtor.Core.GeneratedMSBuildEditorConfig.editorconfig
+E:\.NET\Debtor\Debtor.Core\obj\Debug\net7.0\Debtor.Core.AssemblyInfoInputs.cache
+E:\.NET\Debtor\Debtor.Core\obj\Debug\net7.0\Debtor.Core.AssemblyInfo.cs
+E:\.NET\Debtor\Debtor.Core\obj\Debug\net7.0\Debtor.Core.csproj.CoreCompileInputs.cache
+E:\.NET\Debtor\Debtor.Core\obj\Debug\net7.0\Debtor.Core.dll
+E:\.NET\Debtor\Debtor.Core\obj\Debug\net7.0\refint\Debtor.Core.dll
+E:\.NET\Debtor\Debtor.Core\obj\Debug\net7.0\Debtor.Core.pdb
+E:\.NET\Debtor\Debtor.Core\obj\Debug\net7.0\ref\Debtor.Core.dll

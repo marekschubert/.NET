@@ -1,0 +1,12 @@
+E:\.NET\Quiz\Quiz.Core\bin\Debug\net7.0\Quiz.Core.deps.json
+E:\.NET\Quiz\Quiz.Core\bin\Debug\net7.0\Quiz.Core.dll
+E:\.NET\Quiz\Quiz.Core\bin\Debug\net7.0\Quiz.Core.pdb
+E:\.NET\Quiz\Quiz.Core\obj\Debug\net7.0\Quiz.Core.csproj.AssemblyReference.cache
+E:\.NET\Quiz\Quiz.Core\obj\Debug\net7.0\Quiz.Core.GeneratedMSBuildEditorConfig.editorconfig
+E:\.NET\Quiz\Quiz.Core\obj\Debug\net7.0\Quiz.Core.AssemblyInfoInputs.cache
+E:\.NET\Quiz\Quiz.Core\obj\Debug\net7.0\Quiz.Core.AssemblyInfo.cs
+E:\.NET\Quiz\Quiz.Core\obj\Debug\net7.0\Quiz.Core.csproj.CoreCompileInputs.cache
+E:\.NET\Quiz\Quiz.Core\obj\Debug\net7.0\Quiz.Core.dll
+E:\.NET\Quiz\Quiz.Core\obj\Debug\net7.0\refint\Quiz.Core.dll
+E:\.NET\Quiz\Quiz.Core\obj\Debug\net7.0\Quiz.Core.pdb
+E:\.NET\Quiz\Quiz.Core\obj\Debug\net7.0\ref\Quiz.Core.dll

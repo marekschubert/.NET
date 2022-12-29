@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debtor", "Debtor\Debtor.csproj", "{079D99AF-47AE-4B51-8F30-76DF77F4C348}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debtor.Core", "Debtor.Core\Debtor.Core.csproj", "{61ED5FDC-7C98-4C69-A135-C9152A61B5FB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{079D99AF-47AE-4B51-8F30-76DF77F4C348}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{079D99AF-47AE-4B51-8F30-76DF77F4C348}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{079D99AF-47AE-4B51-8F30-76DF77F4C348}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{079D99AF-47AE-4B51-8F30-76DF77F4C348}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61ED5FDC-7C98-4C69-A135-C9152A61B5FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61ED5FDC-7C98-4C69-A135-C9152A61B5FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61ED5FDC-7C98-4C69-A135-C9152A61B5FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61ED5FDC-7C98-4C69-A135-C9152A61B5FB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0FA38249-F8A8-47C2-9FF0-8254C6606054}
+	EndGlobalSection
+EndGlobal

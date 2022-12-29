@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "Debtor/1.0.0": {
+        "dependencies": {
+          "Debtor.Core": "1.0.0"
+        },
+        "runtime": {
+          "Debtor.dll": {}
+        }
+      },
+      "Debtor.Core/1.0.0": {
+        "runtime": {
+          "Debtor.Core.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Debtor/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Debtor.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

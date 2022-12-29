@@ -1,0 +1,17 @@
+E:\.NET\ConsoleApp7\ConsoleApp7\bin\Debug\net7.0\ConsoleApp7.exe
+E:\.NET\ConsoleApp7\ConsoleApp7\bin\Debug\net7.0\ConsoleApp7.deps.json
+E:\.NET\ConsoleApp7\ConsoleApp7\bin\Debug\net7.0\ConsoleApp7.runtimeconfig.json
+E:\.NET\ConsoleApp7\ConsoleApp7\bin\Debug\net7.0\ConsoleApp7.dll
+E:\.NET\ConsoleApp7\ConsoleApp7\bin\Debug\net7.0\ConsoleApp7.pdb
+E:\.NET\ConsoleApp7\ConsoleApp7\bin\Debug\net7.0\Newtonsoft.Json.dll
+E:\.NET\ConsoleApp7\ConsoleApp7\obj\Debug\net7.0\ConsoleApp7.csproj.AssemblyReference.cache
+E:\.NET\ConsoleApp7\ConsoleApp7\obj\Debug\net7.0\ConsoleApp7.GeneratedMSBuildEditorConfig.editorconfig
+E:\.NET\ConsoleApp7\ConsoleApp7\obj\Debug\net7.0\ConsoleApp7.AssemblyInfoInputs.cache
+E:\.NET\ConsoleApp7\ConsoleApp7\obj\Debug\net7.0\ConsoleApp7.AssemblyInfo.cs
+E:\.NET\ConsoleApp7\ConsoleApp7\obj\Debug\net7.0\ConsoleApp7.csproj.CoreCompileInputs.cache
+E:\.NET\ConsoleApp7\ConsoleApp7\obj\Debug\net7.0\ConsoleApp7.csproj.CopyComplete
+E:\.NET\ConsoleApp7\ConsoleApp7\obj\Debug\net7.0\ConsoleApp7.dll
+E:\.NET\ConsoleApp7\ConsoleApp7\obj\Debug\net7.0\refint\ConsoleApp7.dll
+E:\.NET\ConsoleApp7\ConsoleApp7\obj\Debug\net7.0\ConsoleApp7.pdb
+E:\.NET\ConsoleApp7\ConsoleApp7\obj\Debug\net7.0\ConsoleApp7.genruntimeconfig.cache
+E:\.NET\ConsoleApp7\ConsoleApp7\obj\Debug\net7.0\ref\ConsoleApp7.dll
