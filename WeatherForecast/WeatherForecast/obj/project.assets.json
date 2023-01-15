@@ -215,11 +215,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\.NET\\WeatherForecast\\WeatherForecast\\WeatherForecast.csproj",
+      "projectUniqueName": "E:\\.NET\\WeatherForecast\\WeatherForecast\\WeatherForecast.csproj",
       "projectName": "WeatherForecast",
-      "projectPath": "D:\\.NET\\WeatherForecast\\WeatherForecast\\WeatherForecast.csproj",
+      "projectPath": "E:\\.NET\\WeatherForecast\\WeatherForecast\\WeatherForecast.csproj",
       "packagesPath": "C:\\Users\\mschu\\.nuget\\packages\\",
-      "outputPath": "D:\\.NET\\WeatherForecast\\WeatherForecast\\obj\\",
+      "outputPath": "E:\\.NET\\WeatherForecast\\WeatherForecast\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
