@@ -1,0 +1,15 @@
+AutoMapper:
+
+1. Stwozyć model w Models/TestDto.cs
+2. Wybrać dane, które zawiera TestDto.cs
+3. Zainstalować AutoMapper / AutoMapper.Extensions.Microsoft.DependencyInjection
+4. Stworzyć plik TestMappingProfile.cs : Profile
+5. W konstruktorze:
+	CreateMap<TSource, TDestination>()
+	.ForMember(x => x.PoleZDestination, x => x.MapFrom(x => x.PoleZSource))
+	.ForMember(x => x.PoleZDestination, x => x.MapFrom(x => x.PoleZSource))...; 	
+6. Dodać do konstruktora kontrolera IMapper mapper oraz private readonlu IMapper _mapper;
+7. Mapowanie: vat test = _mapper.Map<NaCoMapować np. List<TestDto>>(CoDoMapowania);
+8. W .NET 5: w Startup dodać w ConfigureServices() -> services.AddAutoMapper(this.GetType().Assembly)
+9. W .NET 6: w Program dodać builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+10. Może być konieczne wypłaszczanie struktury: ...Include(x => x.ListData)

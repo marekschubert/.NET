@@ -10,29 +10,35 @@ namespace RestaurantAPI.Entities
         public DbSet<Address> Addresses{ get; set;}
         public DbSet<Dish> Dishes { get; set;}
 
+        public RestaurantDbContext(DbContextOptions<RestaurantDbContext> options) : base(options)
+        {
+
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Restaurant>()
                 .Property(r => r.Name)
-                .IsRequired()
+               // .IsRequired()
                 .HasMaxLength(25);
 
             modelBuilder.Entity<Dish>()
-                .Property(d => d.Name)
-                .IsRequired(); 
+                .Property(d => d.Name);
+            // .IsRequired(); 
 
+            modelBuilder.Entity<Address>()
+                .Property(a => a.City)
+                .HasMaxLength(50);
+            //  .IsRequired(true);
 
+            modelBuilder.Entity<Address>()
+                .Property(a => a.Street);
+               // .IsRequired(true);
+               // .HasMaxLength(50);
         }
-
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(_connectionString);
-
-
-
-
         }
 
     }

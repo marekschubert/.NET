@@ -38,17 +38,20 @@ namespace RestaurantAPI
                     Description = "Kentucky Fried Chicken",
                     ContactEmail = "contact@kfc.com",
                     HasDelivery = true,
+                    ContactNumber = "123123123",
                     Dishes = new List<Dish>()
                     {
                         new Dish()
                         {
                             Name = "Nashville Hot Chicken",
-                            Price = 10.30M
+                            Price = 10.30M,
+                            Description = "NHC"
                         },
                         new Dish()
                         {
                             Name = "Chicken Nuggets",
-                            Price = 5.30M
+                            Price = 5.30M,
+                            Description = "CN"
                         }
                     },
                     Address = new Address()
