@@ -1,7 +1,54 @@
 WEB API krok po kroku:
 
-1.
-
+1. Nowy projekt WEB API
+2. Ustalenie połączenia z bazą danych:
+- appsettings.json -> ConnectionString:
+	- Można wygenerować w DBMS
+	- Albo: samemu ustalić, np. 
+	  "ConnectionStrings": {
+		"DbConnection": "Server=MAREK\\SQLEXPRESS; Database=RestaurantDb;Encrypt=False;  Trusted_Connection=True;"
+	  }
+3. Utworzyć encje w folderze Entites z ustalonymi polami
+4. Utworzyć klasę kontekstu dziedziczącą po DbContext, np. RestaurantDbContext:
+- utworzyć obiekty tabel klasy DbSet<Model>, np. public DbSet<Restaurant> Restaurants {get; set; }
+- konstruktor pobierający DbContextOptions<KlasaKontekstu> options) : base(options) {}
+- utworzyć zasady dla poszczególnych pól modelu:
+	- w protected override void OnModelCreating(ModelBuilder modelBuilder){
+		modelBuilder.Entity<Model>().Property(x => x.Prop).IsRequired().HasMaxLength(25);} //itp
+- zarejestrować klasę kontekstu w Program.cs:
+	- builder.Services.AddDbContext<KlasaKontekstu>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DbName")));
+5. Seedowanie danych:
+- klasa seedera, np. RestaurantSeeder
+- posiada private readonly KlasaKontekstu -dbContext;
+- konstruktor z dbContext
+- utworzyć funkcje generujące dane do tabeli, np. var x = new List<Model>(){...}; return x;
+- funkcja Seed:
+	- sprawdzenie połączenia: if(_dbContext.Database.CanConnect()) {}
+	- stwierdzenie pustej tablicy: if(!_dbContext.TableName.Any()) {} -> wtedy utworzyć elementy do wypełnienia
+	- zebranie pomniejszych funkcji tworzących
+	- dodanie do tabeli w klasie kontekstu: _dbContext.TableName.AddRange(list);
+	- zapisanie zmian do bazy: _dbContext.SaveChanges();
+- wywołanie funkcji w Program.cs:
+	- builder.Services.AddScoped<SeederClass>();
+	- var app = builder.Build();
+	- var scope = app.Services?.CreateScope();
+	- var seeder = scope?.ServiceProvider.GetRequiredService<SeederClass>();
+	- seeder?.Seed();
+6. Mapowanie przy użyciu AutoMappera:
+	- Stwozyć model w Models/TestDto.cs
+	- Wybrać dane, które zawiera TestDto.cs
+	- Zainstalować AutoMapper / AutoMapper.Extensions.Microsoft.DependencyInjection
+	- Stworzyć plik TestMappingProfile.cs : Profile
+	- W konstruktorze:
+	- CreateMap<TSource, TDestination>()
+	- ForMember(x => x.PoleZDestination, x => x.MapFrom(x => x.PoleZSource))
+	- ForMember(x => x.PoleZDestination, x => x.MapFrom(x => x.PoleZSource))...; 	
+	- Dodać do konstruktora kontrolera IMapper mapper oraz private readonly IMapper _mapper;
+	- Mapowanie: var test = _mapper.Map<NaCoMapować np. List<TestDto>>(CoDoMapowania);
+	- W .NET 5: w Startup dodać w ConfigureServices() -> services.AddAutoMapper(this.GetType().Assembly)
+	- W .NET 6: w Program dodać builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+	- Może być konieczne wypłaszczanie struktury: ...Include(x => x.ListData)
 
 
 
@@ -10,20 +57,4 @@ WEB API krok po kroku:
 
 
 AutoMapper:
-
-1. Stwozyć model w Models/TestDto.cs
-2. Wybrać dane, które zawiera TestDto.cs
-3. Zainstalować AutoMapper / AutoMapper.Extensions.Microsoft.DependencyInjection
-4. Stworzyć plik TestMappingProfile.cs : Profile
-5. W konstruktorze:
-	CreateMap<TSource, TDestination>()
-	.ForMember(x => x.PoleZDestination, x => x.MapFrom(x => x.PoleZSource))
-	.ForMember(x => x.PoleZDestination, x => x.MapFrom(x => x.PoleZSource))...; 	
-6. Dodać do konstruktora kontrolera IMapper mapper oraz private readonly IMapper _mapper;
-7. Mapowanie: vat test = _mapper.Map<NaCoMapować np. List<TestDto>>(CoDoMapowania);
-8. W .NET 5: w Startup dodać w ConfigureServices() -> services.AddAutoMapper(this.GetType().Assembly)
-9. W .NET 6: w Program dodać builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-10. Może być konieczne wypłaszczanie struktury: ...Include(x => x.ListData)
-
-
 
