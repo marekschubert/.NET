@@ -24,6 +24,8 @@ namespace RestaurantAPI
                     PostalCode = r.PostalCode,
                 }));
 
+            CreateMap<CreateDishDto, Dish>();
+
 
         }
 

@@ -1,54 +1,463 @@
 WEB API krok po kroku:
 
-1. Nowy projekt WEB API
-2. Ustalenie połączenia z bazą danych:
-- appsettings.json -> ConnectionString:
-	- Można wygenerować w DBMS
-	- Albo: samemu ustalić, np. 
-	  "ConnectionStrings": {
-		"DbConnection": "Server=MAREK\\SQLEXPRESS; Database=RestaurantDb;Encrypt=False;  Trusted_Connection=True;"
-	  }
-3. Utworzyć encje w folderze Entites z ustalonymi polami
-4. Utworzyć klasę kontekstu dziedziczącą po DbContext, np. RestaurantDbContext:
-- utworzyć obiekty tabel klasy DbSet<Model>, np. public DbSet<Restaurant> Restaurants {get; set; }
-- konstruktor pobierający DbContextOptions<KlasaKontekstu> options) : base(options) {}
-- utworzyć zasady dla poszczególnych pól modelu:
-	- w protected override void OnModelCreating(ModelBuilder modelBuilder){
-		modelBuilder.Entity<Model>().Property(x => x.Prop).IsRequired().HasMaxLength(25);} //itp
-- zarejestrować klasę kontekstu w Program.cs:
-	- builder.Services.AddDbContext<KlasaKontekstu>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DbName")));
-5. Seedowanie danych:
-- klasa seedera, np. RestaurantSeeder
-- posiada private readonly KlasaKontekstu -dbContext;
-- konstruktor z dbContext
-- utworzyć funkcje generujące dane do tabeli, np. var x = new List<Model>(){...}; return x;
-- funkcja Seed:
-	- sprawdzenie połączenia: if(_dbContext.Database.CanConnect()) {}
-	- stwierdzenie pustej tablicy: if(!_dbContext.TableName.Any()) {} -> wtedy utworzyć elementy do wypełnienia
-	- zebranie pomniejszych funkcji tworzących
-	- dodanie do tabeli w klasie kontekstu: _dbContext.TableName.AddRange(list);
-	- zapisanie zmian do bazy: _dbContext.SaveChanges();
-- wywołanie funkcji w Program.cs:
-	- builder.Services.AddScoped<SeederClass>();
-	- var app = builder.Build();
-	- var scope = app.Services?.CreateScope();
-	- var seeder = scope?.ServiceProvider.GetRequiredService<SeederClass>();
-	- seeder?.Seed();
-6. Mapowanie przy użyciu AutoMappera:
+1. Stworzyć nowy projekt WEB API
+
+2 Instalacja odpowiednich pluginów:
+	- najpopularniejsze:
+		- Microsoft.EntityFrameworkCore
+		- Microsoft.EntityFrameworkCore.SqlServer
+		- Microsoft.EntityFrameworkCore.Tools
+		- Swashbuckle.AspNetCore // do Swaggera
+		- AutoMapper.Extensions.Microsoft.DependencyInjection
+		- Microsoft.VisualStudio.Web.CodeGeneration.Design
+		- Microsoft.EntityFrameworkCore.Relational
+		- Microsoft.EntityFrameworkCore.Abstractions
+		- Microsoft.AspNetCore.Hosting
+		- Microsoft.AspNetCore.Identity.EntityFrameworkCore
+		- Microsoft.AspNetCore.Identity.UI
+		- Microsoft.EntityFrameworkCore.Design
+		- Microsoft.VisualStudio.Web.CodeGeneration.Design
+		- FluentValidation.AspNetCore
+		- FluentValidation
+		- Aspose.Words
+		
+3. Ustalenie połączenia z bazą danych:
+	- appsettings.json -> ConnectionString:
+		- Można wygenerować w DBMS
+		- Albo: samemu ustalić, np. 
+		  "ConnectionStrings": {
+			"DbConnection": "Server=MAREK\\SQLEXPRESS; Database=MyDb;Encrypt=False;  Trusted_Connection=True;"
+		  }
+		  
+4. Utworzyć encje w folderze Entites z ustalonymi polami
+
+5 W trakcie tworzyć klasy dto do transferu danych
+	- mogą mieć adnotacje typu [Required]... -> do walidacji przy użyciu if(!ModelState.IsValid)
+	
+6. Utworzyć klasę kontekstu dziedziczącą po DbContext, np. RestaurantDbContext:
+	- utworzyć obiekty tabel klasy DbSet<Model>, np. public DbSet<Restaurant> Restaurants {get; set; }
+	- konstruktor pobierający DbContextOptions<KlasaKontekstu> options) : base(options) {}
+	- utworzyć zasady dla poszczególnych pól modelu:
+		- w protected override void OnModelCreating(ModelBuilder modelBuilder){
+			modelBuilder.Entity<Model>().Property(x => x.Prop).IsRequired().HasMaxLength(25);} //itp
+	- zarejestrować klasę kontekstu w Program.cs:
+		- builder.Services.AddDbContext<KlasaKontekstu>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbName")));
+
+7. Stworzenie migracji:
+	- w konsoli NuGet
+	- żeby stworzyć:
+		- add-migration Init // nazwa migracji
+		- update-database
+	- żeby usunąć wszystko:
+		- remove-migration // albo fizycznie usunąć folder z migracjami
+		- drop-database
+
+7. Seedowanie danych:
+	- klasa seedera, np. RestaurantSeeder
+	- posiada private readonly KlasaKontekstu -dbContext;
+	- konstruktor z dbContext
+	- utworzyć funkcje generujące dane do tabeli, np. var x = new List<Model>(){...}; return x;
+	- funkcja Seed:
+		- sprawdzenie połączenia: if(_dbContext.Database.CanConnect()) {}
+		- stwierdzenie pustej tablicy: if(!_dbContext.TableName.Any()) {} -> wtedy utworzyć elementy do wypełnienia
+		- zebranie pomniejszych funkcji tworzących
+		- dodanie do tabeli w klasie kontekstu: _dbContext.TableName.AddRange(list);
+		- zapisanie zmian do bazy: _dbContext.SaveChanges();
+	- wywołanie funkcji w Program.cs:
+		- builder.Services.AddScoped<SeederClass>();
+		- var app = builder.Build();
+		- var scope = app.Services?.CreateScope();
+		- var seeder = scope?.ServiceProvider.GetRequiredService<SeederClass>();
+		- seeder?.Seed();
+		
+8. Mapowanie przy użyciu AutoMappera:
 	- Stwozyć model w Models/TestDto.cs
 	- Wybrać dane, które zawiera TestDto.cs
 	- Zainstalować AutoMapper / AutoMapper.Extensions.Microsoft.DependencyInjection
 	- Stworzyć plik TestMappingProfile.cs : Profile
 	- W konstruktorze:
 	- CreateMap<TSource, TDestination>()
-	- ForMember(x => x.PoleZDestination, x => x.MapFrom(x => x.PoleZSource))
-	- ForMember(x => x.PoleZDestination, x => x.MapFrom(x => x.PoleZSource))...; 	
+	  .ForMember(x => x.PoleZDestination, x => x.MapFrom(x => x.PoleZSource))
+	  .ForMember(x => x.PoleZDestination, x => x.MapFrom(x => x.PoleZSource))...; 	
 	- Dodać do konstruktora kontrolera IMapper mapper oraz private readonly IMapper _mapper;
 	- Mapowanie: var test = _mapper.Map<NaCoMapować np. List<TestDto>>(CoDoMapowania);
 	- W .NET 5: w Startup dodać w ConfigureServices() -> services.AddAutoMapper(this.GetType().Assembly)
 	- W .NET 6: w Program dodać builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 	- Może być konieczne wypłaszczanie struktury: ...Include(x => x.ListData)
+	
+9. Stworzenie serwisu - pośrednika między kontrolerem a bazą danych:
+	- z dodatkową warstwą - interfejsem z przedrostkiem I, posiadającym np. int Create(Dto dto), Dto GetById(int id)
+	- implementacja ma dodatkowo private readonly DbContext _dbContext oraz _mapper
+	- rejestraja serwisu w Program.cs: builder.Services.AddScoped<IService, ServiceImpl>();
+	
+10. Utworzenie kontrolera:
+	- w Web API dziedziczy po ContrellerBase
+	- private readonly IService _myService; + konstruktor
+	- warto dać adnotację przed całym kontrolerem typu [Route("api/myController")]
+	- przy akcjach adnotacje [HttpGet], [HttpPost]... + ewentualne dodatkowe ścieżki, np. [HttpGet("{id}")]
+	- akcje typu public ActionResult CreateSth([FromBody] CreateSthDto dto){}
+	- można użyć adnotacji [FromBody], [FromRoute]... do określenia pochodzenia danych do żądania
+	- może być ActionResult<ReturnType>, np. public ActionResult<IEnumerable<MyDto>> GetAll(){}
+	- prosta walidacja: dto mogą mieć adnotacje typu [Required]... -> do walidacji przy użyciu if(!ModelState.IsValid)
+	- zwracanie odpowiedzi typu Created(...), Ok(...), BadRequest(...), NotFound(...), ...
+	
+11.  Opcjonalnie: Swagger:
+	- builder.Services.AddSwaggerGen();
+	- if (app.Environment.IsDevelopment())
+	{
+	  //  app.UseSwagger();
+	  //  app.UseSwaggerUI();
+	  //  app.seed();
+	}
+	
+12. Logger:
+	- paczka NLog.Web.AspNetCore
+	- plik nlog.config dodany do projektu
+	- najważniejsze: target oraz logger
+		- można dodać swoje wyspecjalizowane, o swojej nazwie, poziomie powiadomień i z jakich plików
+	- przykład z internetu / poprzedniego projektu
+	- użycie w Program.cs: 
+            // NLog: Setup NLog for Dependency injection
+            builder.Logging.ClearProviders();
+            builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+            builder.Host.UseNLog();
+	- użycie w serwisie: dodanie do konstruktora ILogger<NazwaSerwisu> logger
+	- pisanie do logów: _logger.LogError(message); // wiele rodzajów, np. LogWarn()...
+	
+13. Middleware:
+	- utworzyć coś w stylu Middleware/ErrorHandlingMiddleware.cs : IMiddleware
+	- impl funkcję z IMiddleware - może być async
+	- przykładowe działanie: logowanie błędów:
+		- można utworzyć duży blok try catch 
+		- w try zrobić await next.Invoke(context);
+		- catchami łapać customowe wyjątki
+			- utworzyć własne wyjątki, np. nie znaleziono restauracji
+			- łapać je oraz zwracać odpowiedź do klienta:
+				context.Response.StatusCode = 404;
+				await context.Response.WriteAsync(e.Message);
+				
+    - zarejestrować: builder.Services.AddScoped<ErrorHandlingMiddleware>();
+	- użycie w Program.cs: przed endpointsami, najlepiej w miarę na początku przed innymi: app.UseMiddleware<ErrorHandlingMiddleware>();
+	- dodatek: adnotacja przed klasą kontrolera [ApiController] powoduje automatyczną walidację typu ModelState.IsValid
+	
+14. Podencje:
+	- jako że nie są główne, tylko niejako zależne od głównych encji używanych w aplikacji, to nie będzie dla nich oddzielnych ścieżek typu api/restaurant -> brak dla dań
+	- nowy kontroler do obsługi pobierania/usuwania/modyfikowania -> ścieżka zależna od głównej encji, np. api/restaurant/{restaurantId}/dish -> dania konkretnej restauracji
+	- reszta jak w standardowym kontrolerze/serwisie
+
+15. Autentykacja użytkowników:
+	- utworzyć klasy User i Role + nowe DbSet<User> i <Role> + warunki typu IsRequired() + add-migration + update-database + seedowanie ról
+	- nowy kontroler do obsługi użytkowników
+	- hashowanie haseł: użycie interfejsu IPasswordHasher i rejestracja: builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>(); // User - encja z danymi użytkowników
+            var hashedPassword = _passwordHasher.HashPassword(newUser, dto.Password);
+            newUser.PasswordHash = hashedPassword;
+	- rejestracja: nowy RegisterUserDto z propetiesami potrzebnymi do zarejestrowania		
+	
+16. Walidacja danych:
+	- paczka FluentValidation.AspNetCore
+	- nowa klasa typu RegisterUserDtoValidator (najlepiej w podfolderze dla walidatorów) : AbstractValidator<KlasaDoWalidacji>
+	- w ctor można pobrać dbContext
+	- ustawianie reguł: RuleFor(x => x.Prop).NotEmpty().itp... - dla dowolnej liczby dowolnych pól, pisane w konstruktorze
+	- można stworzyć swoje zasady, np. walidacja, czy email już jest używany w bazie danych:
+		RuleFor(x => x.Email)
+                .Custom((value, context) => // dwa parametry: value: wartość pola do walidacji, context: ValidationContext
+                {
+                    var emailInUse = dbContxt.Users.Any(x => x.Email == value);
+                    if (emailInUse)
+                    {
+                        context.AddFailure("Email", "That email is taken");
+                    }
+                });
+	- rejestracja: 	
+            builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+			- dodatkowo rozszerzenie: builder.Services.AddControllers().AddFluentValidation();
+	
+17. Tokeny JWT (Json Web Token):
+	- paczka Microsoft.AspNetCore.Authentication.JwtBearer
+	- dodać opcje w appsettings.json:
+		  "Authentication": {
+			"JwtKey": "PRIVATE_KEY_DONT_SHARE",
+			"JwtExpireDays": 15,
+			"JwtIssuer": "http://restaurantapi.com"
+		  }
+	- stworzyć klasę z tymi samymi propertkami AuthenticationSettings
+	- opisane w BONUSIE pobranie danych z appsettings.json:
+		- w pliku tym jest np. sekcja:
+		  "Authentication": {
+			"JwtKey": "PRIVATE_KEY_DONT_SHARE",
+			"JwtExpireDays": 15,
+			"JwtIssuer": "http://restaurantapi.com"
+			}
+		- aby w Program.cs pobrać te dane, można:
+			- stworzyć klasę o tych propertkach co dane w appsettings.json
+			- a następnie stworzyć zmienną tej klasy w Mainie typu var authenticationSettings
+			- a następnie pobrać te dane i je bindować: builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
+			- voila!
+	- configuracja w Program.cs:
+		builder.Services.AddAuthentication(options =>
+				{
+					options.DefaultAuthenticateScheme = "Bearer";
+					options.DefaultScheme = "Bearer";
+					options.DefaultChallengeScheme = "Bearer";
+				}).AddJwtBearer(options =>
+				{
+					options.RequireHttpsMetadata = false;
+					options.SaveToken = true;
+					options.TokenValidationParameters = new TokenValidationParameters
+					{
+						ValidIssuer = authenticationSettings.JwtIssuer,
+						ValidAudience = authenticationSettings.JwtIssuer,
+						IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey))
+					};
+				}); 
+	- poniżej app.AddMiddleware(), ale nad app.UseHttpsRediraction() dodać: app.UseAuthentication();
+	- generowanie tokenu:
+		- pobieramy użytkownika na podstawie emaila i sprawdzamy czy istnieje w bazie -> jeśli nie to błąd obsługiwany w middleware
+		- weryfikujemy podane hasło z hashem zapisanym na koncie użytkownika
+		- jeśli się zgadza to tworzymy listę claimów - informacji o użytkowniku, które będą zahashowane i uwzględnione w tokenie
+		- robimy klucz na podstawie klucza zawartego w appsettings.json:
+			- możemy zarejestrować var authenticationSettings z Program.cs jako build.Services.AddSingleton(authenticationSettings) i dodać do kontrolera jak serwis
+			- z niego pobieramy i dodajemy dane do generowanego klucza:  var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
+		- można dodać credentials: var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        - oraz expires: var expires = DateTime.Now.AddDays(_authenticationSettings.JwtExpireDays);
+		- generujemy token z tych danych:
+            var token = new JwtSecurityToken(_authenticationSettings.JwtIssuer,
+                _authenticationSettings.JwtIssuer,
+                claims,
+                expires: expires,
+                signingCredentials: cred);
+		- na koniec zwracamy token:
+            var tokenHandler = new JwtSecurityTokenHandler();
+            return tokenHandler.WriteToken(token);		
+		- użycie i weryfikacja:
+			- można wykonać inne zapytanie i dodać w nagłówkach Authorization -> Bearer *token*
+			- wtedy podczas debugowania włączyć Debug - QuichWatch i wpisująć HttpContext.User ma się dane o użytkowniku na podstawie tokena
+		- przykładowy kod generujący token na podstawie danych użytkownika:
+			public string GenerateJwt(LoginDto dto) // LoginDto: string Email i string Password podane w ciele zapytania Post
+			{
+				var user = _context
+					.Users
+					.Include(x => x.Role)
+					.FirstOrDefault(x => x.Email == dto.Email);
+				
+				if (user == null)
+				{
+					throw new BadRequestException("Invalid username or password");
+				}
+
+				var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
+
+				if (result == PasswordVerificationResult.Failed)
+				{
+					throw new BadRequestException("Invalid username or password");
+				}
+
+				var claims = new List<Claim>()
+				{
+					new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+					new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
+					new Claim(ClaimTypes.Role, $"{user.Role.Name}"),
+					new Claim("DateOfBirth", user.DateOfBirth.Value.ToString("yyyy-MM-dd")),
+					new Claim("Nationality", user.Nationality)
+				};
+
+				var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
+				var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+				var expires = DateTime.Now.AddDays(_authenticationSettings.JwtExpireDays);
+
+				var token = new JwtSecurityToken(_authenticationSettings.JwtIssuer,
+					_authenticationSettings.JwtIssuer,
+					claims,
+					expires: expires,
+					signingCredentials: cred);
+
+				var tokenHandler = new JwtSecurityTokenHandler();
+				return tokenHandler.WriteToken(token);
+			}
+
+18. Autoryzacja:
+	- dodanie adnotacji [Authorize] przed kontrolerem/metodą oznacza autoryzację tokenem
+	- czyli tylko gdy w nagłówku jest Authorization -> Bearer *token* to wtedy ma się dostęp do danego kontrolera/metody
+	- można wyłączyć daną metodę, dając przed nią adnotację [AllowAnonymous]
+	- autoryzacja na podstawie roli:
+		– [Authorize(Roles = "Admin, PowerUser")]
+			• jeśli chcemy, aby użytkownik musiał mieć dowolną z ról, oddzielamy je przecinkiem
+		– [Authorize(Roles = "Admin")]
+		  [Authorize(Roles = "PowerUser")]
+		  • Jeśli musi posiadać kilka ról, aby móc wykonać akcję.
+	- autoryzacja polityką Policy, też na podstawie claimów:
+		- można dodać Policy w Program.cs:
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("HasNationality", options => // "HasNationality": nazwa polityki
+                {
+                    options.RequireClaim("Nationality", "German", "Polish"); // wymóg zgodności claima "Nationality" z dalszymi wartościami
+					// czyli jednocześnie jest wymagane posiadanie takiego claima, a następnie sprawdzana jest zgodność z podanymi wartościami
+					// gdyby było tylko options.RequireClaim("Nationality") to by oznaczało tylko wymóg posiadania tego claima, bez względu na wartość
+                });
+            });
+	- customowa autoryzacja:
+		- np. udzielenie dostępu do danej metody danej grupie użytkowników o wybranych cechach
+		- np. ogranieczenie związane z wiekiem lub dostęp do modyfikacji danych tylko przez twórcę / właściciela
+		- w Program.cs: 
+			builder.Services.AddAuthorization(options => 
+				options.AddPolicy("Atleast20", options =>
+				{
+					options.AddRequirements(new MinimumAgeRequirement(20));
+				});
+			});
+			builder.Services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
+		- MinimumAgeRequirement: klasa implementująca "znacznik" IAuthorizationRequirement: // 
+			public class MinimumAgeRequirement : IAuthorizationRequirement
+			{
+				public int MinimumAge { get; }
+				public MinimumAgeRequirement(int minimumAge)
+				{
+					MinimumAge = minimumAge;
+				}
+			}
+		- obsługa wymagania: klasa implementująca AuthorizationHandler<MinimumAgeRequirement>: // MinimumAgeRequirement = customowe wymaganie
+			public class MinimumAgeRequirementHandler : AuthorizationHandler<MinimumAgeRequirement>
+			{
+				private readonly ILogger<MinimumAgeRequirementHandler> _logger;
+
+				public MinimumAgeRequirementHandler(ILogger<MinimumAgeRequirementHandler> logger)
+				{
+					_logger = logger; // można dodać inne serwisy, np. loggera
+				}
+
+				protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, MinimumAgeRequirement requirement)
+				{
+					// z contextu można pobrać dane o użtykowniku
+					var dateOfBirth = DateTime.Parse(context.User.FindFirst(c => c.Type == "DateOfBirth").Value);
+
+					var userEmail = context.User.FindFirst(c => c.Type == ClaimTypes.Name).Value;
+
+					_logger.LogInformation($"User: {userEmail} with date of birth: [{dateOfBirth}]");
+
+					if (dateOfBirth.AddYears(requirement.MinimumAge) < DateTime.Today)    
+					{
+						_logger.LogInformation("Authorization succedded");
+						context.Succeed(requirement); // potwierdzenie poprawnej autoryzacji
+					}
+					else
+					{
+						_logger.LogInformation("Authorization failed");
+					}
+					return Task.CompletedTask;
+				}
+			}
+		- można oznaczyć adnotacją daną metodę/klasę albo można stworzyć serwis autoryzujący, który można wykorzystać w innych serwisach, ograniczając np. dostęp do tworzenia i zarzadzania danymi:
+		    public enum ResourceOperation
+			{
+				Create, Read, Update, Delete
+			}
+
+			public class ResourceOperationRequirement : IAuthorizationRequirement
+			{
+				public ResourceOperation ResourceOperation { get; }
+
+				public ResourceOperationRequirement(ResourceOperation resourceOperation)
+				{
+					ResourceOperation = resourceOperation;
+				}
+			}
+		- następnie handler:
+		    public class ResourceOperationRequirementHandler : AuthorizationHandler<ResourceOperationRequirement, Restaurant>
+			{
+				protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ResourceOperationRequirement requirement, Restaurant restaurant)
+				{
+					if (requirement.ResourceOperation == ResourceOperation.Read 
+						|| requirement.ResourceOperation == ResourceOperation.Create)
+					{
+						context.Succeed(requirement);
+					}
+
+					var userId = context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
+					if (restaurant.CreatedById == int.Parse(userId))
+					{
+						context.Succeed(requirement);
+					}
+
+					return Task.CompletedTask;
+
+				}
+			}
+		- rejestracja:
+            builder.Services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
+		- trzeba dodać do ctor w serwisie i użycie w metodzie Delete (która dodatkowo przyjmuje nowy parametr typu ClaimsPrincipal user, otrzymywany z kontrolera jako User):
+			- uwaga: kwestia przekazywania Usera zrefaktorowana w części "UserContextService"
+			var authorizationResult = _authorizationService.AuthorizeAsync(user, restaurant, new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
+			if (!authorizationResult.Succeeded)
+			{
+				throw new ForbidException();
+			}
+	- UserContextService: serwis posiadający dane o użytkowniku, z któych można korzystać wszedzie dzięki wstrzykiwaniu serwisu:
+		- w tym serwisie potrzeba wstrzyknąć IHttpContextAccessor httpContextAccessor, z którego można pobrać dane o użytkowniku, np.
+			public ClaimsPrincipal User => _httpContextAccessor.HttpContext?.User;
+			public int? GetUserId => User is null ? null : (int?) int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+	- + rejestracja w Program.cs + jeszcze trzeba dodać: builder.Services.AddHttpContextAccessor();
+	- teraz można z tego korzystać w każdym serwisie dzięki wstrzykiwaniu, a więc zwiększona elastyczność kodu i nie jest się zależnym od kontrolera / httpContextu w nim
+		
+19. Paginacja:
+	- wybieranie części danych, podzielonych na pewną liczbę stron po pewną liczbę elementów
+	- filtrowanie danych: dodać queryString i na jego podstawie [FromQuery] filtrować dane w serwisie
+		- przykład filtru:
+			.Where(r => searchPhrase == null || (r.Name.ToLower().Contains(searchPhrase.ToLower()) 
+                                                    || r.Description.ToLower().Contains(searchPhrase.ToLower())))
+	- pobieranie danych o: searchPhrase, liczba elementów na stronie, numer aktualnej strony
+	- wysyłanie danych o: elementy (zasoby), zakres wyświetlanych danych, liczba wszystkich elementów, liczba wszystkich stron
+	- te dane najlepiej pobierać jako queryString [FromQuery] -> zrobić klasę zbierającą te dane, np. RestaurantQuery, coś w stylu dto
+	- przykład paginacji:                
+		.Skip(query.PageSize * (query.PageNumber - 1))
+        .Take(query.PageSize)
+	- sortowanie danych: dodać do klasy zbierającej dane propertki typu SortBy i SortingOrder
+	- walidacja tej klasy:
+		- sprawdzić poprawność danych o stronach, np. 
+            RuleFor(r => r.PageNumber).GreaterThanOrEqualTo(1);
+            RuleFor(r => r.PageSize).Custom((value, context) =>
+            {
+                if (!allowedPageSizes.Contains(value))
+                {
+                    context.AddFailure("PageSize", $"PageSize must in [{string.Join(",", allowedPageSizes)}]");
+                }
+            }); // + dodać: private int[] allowedPageSizes = new[] { 5, 10, 15 }; // jako zbiór możliwych opcji
+		- poprawność sortowania (dostępne kolumny, po których można sortować):
+            RuleFor(r => r.SortBy).Must(value => string.IsNullOrEmpty(value) || allowedSortByColumnNames.Contains(value))
+                .WithMessage($"Sort by is optional, or must be in [{string.Join(",", allowedSortByColumnNames)}]");
+				// + dodać: private string[] allowedSortByColumnNames = { nameof(Restaurant.Name), nameof(Restaurant.Category), nameof(Restaurant.Description) };
+	- przykład sortowania: 
+		if (!string.IsNullOrEmpty(query.SortBy))
+		{
+			var columnsSelectors = new Dictionary<string, Expression<Func<Restaurant, object>>>
+			{
+				{ nameof(Restaurant.Name), r => r.Name },
+				{ nameof(Restaurant.Description), r => r.Description },
+				{ nameof(Restaurant.Category), r => r.Category },
+			};
+			
+			var selectedColumn = columnsSelectors[query.SortBy];
+
+			baseQuery = query.SortDirection == SortDirection.ASC 
+				? baseQuery.OrderBy(r => r.Name)
+				: baseQuery.OrderByDescending(r => r.Name);     
+	- poprawna kolejność działania: 1. filtrowanie 2. sortowanie 3. skip i take odpowiednią liczbą rezultatów
+
+20. CORS (Cross Origin Resource Sharing):
+	- naprzeciw polityce tego samego źródła zapytania (tej samej domenie)
+	- żeby można było wykonywać zapytania z innej domeny, np. aplikacji frontendowej, trzeba:
+		- dodać AddCors(...) do serwisów, gdzie w opcjach ustawia się odpowiednią politykę, czyli m.in. zezwalanie na wykonanie dowolnych/poszczególnych metod, wysyłanie nagłówków, zezwalanie określonym źródłom, np.
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("FrontEndClient", options =>
+                {
+                    options.AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .WithOrigins(builder.Configuration["AllowedOrigins"]); // sekcja w appsettings.json, np. "AllowedOrigins": "http://localhost:8080",
+                });
+            });
+		- a także dodać poniżej: app.UseCors("FrontEndClient");
 
 
 
@@ -56,5 +465,71 @@ WEB API krok po kroku:
 
 
 
-AutoMapper:
 
+BONUSY (tematy niezwiązane bezpośrednio z żadnym konkretnym etapem):
+
+1. Pobieranie danych z pliku appsettings.json:
+	- w pliku tym jest np. sekcja:
+		  "NazwaSekcji": {
+			"JwtKey": "PRIVATE_KEY_DONT_SHARE",
+			"JwtExpireDays": 15,
+			"JwtIssuer": "http://restaurantapi.com"
+			}
+	- aby w Program.cs pobrać te dane, można:
+		- stworzyć klasę o tych propertkach co dane w appsettings.json
+		- a następnie stworzyć zmienną tej klasy w Mainie typu var pobraneDane
+		- a następnie pobrać te dane i je bindować: builder.Configuration.GetSection("NazwaSekcji").Bind(pobraneDane);
+		- voila!
+	- albo po prostu: builder.Configuration["AllowedOrigins"]
+	
+2. Opcja wysyłania plików statycznych:
+	- paczka Microsoft.AspNetCore.StaticFiles
+	- na początku trzeba dodać: app.UseStaticFiles();
+	- generalnie można mieć dostęp do plików z folderu wwwroot, dostęp do nich bez "przedrostka" api/, np. https://localhost:7194/sample-file.txt
+	- można dodać autoryzację, żeby ograniczyć dostęp do plików prywatnych, tylko dla zautoryzowanych użytkowników z tokenem
+	- przykład kontrolera obsługującego pliki:
+		[Route("file")] // wysyłka np. do https://localhost:7194/file?fileName=private-file.txt
+		[Authorize]
+		public class FileController : ControllerBase
+		{
+			public ActionResult GetFile([FromQuery] string fileName)
+			{
+				var rootPath = Directory.GetCurrentDirectory(); // główny folder projektu
+				var filePath = $"{rootPath}/PrivateFiles/{fileName}"; // PrivateFiles: wybrane źródło plików
+				var fileExists = System.IO.File.Exists(filePath);
+				if (!fileExists)
+				{
+					return NotFound();
+				}
+				var contentProvider = new FileExtensionContentTypeProvider();
+				contentProvider.TryGetContentType(filePath, out string contentType); // aby dostać typ pliku (rozszerzenie)
+				var fileContents = System.IO.File.ReadAllBytes(filePath);
+				return File(fileContents, contentType, fileName); // potrzeba: zawartość pliku, typ pliku, nazwa pliku pod jaką ściągnie użytkownik 
+			}
+			[HttpPost]
+			public ActionResult Upload([FromForm] IFormFile file)
+			{
+				if (file != null && file.Length > 0)
+				{
+					var rootPath = Directory.GetCurrentDirectory();
+					var fileName = file.FileName;
+					var fullPath = $"{rootPath}/PrivateFiles/{fileName}";
+
+					using (var stream = new FileStream(fullPath, FileMode.Create))
+					{
+						file.CopyTo(stream);
+					}
+					return Ok();
+				}
+				return BadRequest();
+			}
+			- żeby wysłać plik w postmanie, trzeba wybrać nie raw, tylko form-data, w Key wpisać nazwę zmienne użytej w Upload (czyli w przykładzie: file)
+			- jako typ wybrać nie text, tylko file, a potem obok wybrać plik do przesłania
+		}
+
+3. Cache przeglądarki:
+	- żeby API było wydajniejsze, można korzystać z cache przeglądarki, żeby niektóre zapytania, które się często nie zmieniają, np. pliki statyczne, były zapamiętywane
+	- za pierwszym razem jest wykonywane zapytanie do kontrolera, ale następne, dopóki nie minie określony czas, będzie pobierane z przeglądarki
+	- trzeba dodać na samym początku (przed app.UseStaticFiles()): app.UseResponseCaching();
+	- następnie na daną metodę nałożyć adnotację typu: [ResponseCache(Duration = 1200, VaryByQueryKeys = new[] {"fileName"})]
+	- można ustawić m.in. czas trwania cachowania 

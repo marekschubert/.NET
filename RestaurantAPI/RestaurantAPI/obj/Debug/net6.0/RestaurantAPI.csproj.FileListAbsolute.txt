@@ -87,3 +87,12 @@ E:\.NET\RestaurantAPI\RestaurantAPI\obj\Debug\net6.0\RestaurantAPI.genruntimecon
 E:\.NET\RestaurantAPI\RestaurantAPI\obj\Debug\net6.0\ref\RestaurantAPI.dll
 E:\.NET\RestaurantAPI\RestaurantAPI\bin\Debug\net6.0\AutoMapper.dll
 E:\.NET\RestaurantAPI\RestaurantAPI\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+E:\.NET\RestaurantAPI\RestaurantAPI\bin\Debug\net6.0\nlog.config
+E:\.NET\RestaurantAPI\RestaurantAPI\bin\Debug\net6.0\NLog.dll
+E:\.NET\RestaurantAPI\RestaurantAPI\bin\Debug\net6.0\NLog.Extensions.Logging.dll
+E:\.NET\RestaurantAPI\RestaurantAPI\bin\Debug\net6.0\NLog.Web.AspNetCore.dll
+E:\.NET\RestaurantAPI\RestaurantAPI\bin\Debug\net6.0\FluentValidation.dll
+E:\.NET\RestaurantAPI\RestaurantAPI\bin\Debug\net6.0\FluentValidation.AspNetCore.dll
+E:\.NET\RestaurantAPI\RestaurantAPI\bin\Debug\net6.0\FluentValidation.DependencyInjectionExtensions.dll
+E:\.NET\RestaurantAPI\RestaurantAPI\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+E:\.NET\RestaurantAPI\RestaurantAPI\bin\Debug\net6.0\RestaurantAPI.staticwebassets.runtime.json
