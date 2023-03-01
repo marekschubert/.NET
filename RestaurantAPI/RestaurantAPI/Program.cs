@@ -76,7 +76,7 @@ namespace RestaurantAPI
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddDbContext<RestaurantDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("RestaurantDb")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
 
            // builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
