@@ -40,8 +40,36 @@ WEB API krok po kroku:
 	- utworzyć zasady dla poszczególnych pól modelu:
 		- w protected override void OnModelCreating(ModelBuilder modelBuilder){
 			modelBuilder.Entity<Model>().Property(x => x.Prop).IsRequired().HasMaxLength(25);} //itp
+		- można zrobić:
+            base.OnModelCreating(modelBuilder);
+			modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly);
+			- i wtedy stworzyć nowe klasy typu
+				public class WorkerConfiguration : IEntityTypeConfiguration<Worker>
+				{
+					public void Configure(EntityTypeBuilder<Worker> builder)
+					{
+						builder.HasKey(w => w.Id);
+
+						builder
+							.HasOne(w => w.Department)
+							.WithMany(d => d.Workers)
+							.HasForeignKey(w => w.DepartmentId);
+						
+						builder.Property(w => w.FirstName).HasMaxLength(30);
+						builder.Property(w => w.LastName).HasMaxLength(30);
+					}
+				}
 	- zarejestrować klasę kontekstu w Program.cs:
 		- builder.Services.AddDbContext<KlasaKontekstu>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbName")));
+	- przykład relacji jeden-do-wielu:
+        builder
+            .HasOne(w => w.Department)
+            .WithMany(d => d.Workers)
+            .HasForeignKey(w => w.DepartmentId);
+	- przykład relacji wiele-do-wielu:
+		- builder.HasMany(w => w.Workers)
+			   .WithMany(s => s.Specialities)
+			   .UsingEntity(j => j.ToTable("WorkersSpecialities"));
 
 7. Stworzenie migracji:
 	- w konsoli NuGet
@@ -54,7 +82,7 @@ WEB API krok po kroku:
 
 7. Seedowanie danych:
 	- klasa seedera, np. RestaurantSeeder
-	- posiada private readonly KlasaKontekstu -dbContext;
+	- posiada private readonly KlasaKontekstu _dbContext;
 	- konstruktor z dbContext
 	- utworzyć funkcje generujące dane do tabeli, np. var x = new List<Model>(){...}; return x;
 	- funkcja Seed:
@@ -101,7 +129,7 @@ WEB API krok po kroku:
 	- prosta walidacja: dto mogą mieć adnotacje typu [Required]... -> do walidacji przy użyciu if(!ModelState.IsValid)
 	- zwracanie odpowiedzi typu Created(...), Ok(...), BadRequest(...), NotFound(...), ...
 	
-11.  Opcjonalnie: Swagger:
+11. Opcjonalnie: Swagger:
 	- builder.Services.AddSwaggerGen();
 	- if (app.Environment.IsDevelopment())
 	{
