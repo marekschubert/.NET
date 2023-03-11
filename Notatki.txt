@@ -92,11 +92,11 @@ WEB API krok po kroku:
 		- dodanie do tabeli w klasie kontekstu: _dbContext.TableName.AddRange(list);
 		- zapisanie zmian do bazy: _dbContext.SaveChanges();
 	- wywołanie funkcji w Program.cs:
-		- builder.Services.AddScoped<SeederClass>();
-		- var app = builder.Build();
-		- var scope = app.Services?.CreateScope();
-		- var seeder = scope?.ServiceProvider.GetRequiredService<SeederClass>();
-		- seeder?.Seed();
+		builder.Services.AddScoped<SeederClass>();
+		var app = builder.Build();
+		var scope = app.Services?.CreateScope();
+		var seeder = scope?.ServiceProvider.GetRequiredService<SeederClass>();
+		seeder?.Seed();
 		
 8. Mapowanie przy użyciu AutoMappera:
 	- Stwozyć model w Models/TestDto.cs
