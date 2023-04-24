@@ -155,6 +155,10 @@ WEB API krok po kroku:
 13. Middleware:
 	- utworzyć coś w stylu Middleware/ErrorHandlingMiddleware.cs : IMiddleware
 	- impl funkcję z IMiddleware - może być async
+	- można dodać ILogger<ErrorHandlingMiddleware> _logger
+	- stworzyć własne klasy wyjątków, jak np. Exceptions/NotFoundException : Exception, np.
+		public class NotFoundException : Exception
+		{ public NotFoundException(string message) : base(message){} }
 	- przykładowe działanie: logowanie błędów:
 		- można utworzyć duży blok try catch 
 		- w try zrobić await next.Invoke(context);
@@ -166,6 +170,7 @@ WEB API krok po kroku:
 				
     - zarejestrować: builder.Services.AddScoped<ErrorHandlingMiddleware>();
 	- użycie w Program.cs: przed endpointsami, najlepiej w miarę na początku przed innymi: app.UseMiddleware<ErrorHandlingMiddleware>();
+	- potem użycie: w serwisach rzucać wyjątkami danego typu z wiadomością o szczegółach błedu
 	- dodatek: adnotacja przed klasą kontrolera [ApiController] powoduje automatyczną walidację typu ModelState.IsValid
 	
 14. Podencje:
