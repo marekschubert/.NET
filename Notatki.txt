@@ -24,10 +24,16 @@ WEB API krok po kroku:
 3. Ustalenie połączenia z bazą danych:
 	- appsettings.json -> ConnectionString:
 		- Można wygenerować w DBMS
-		- Albo: samemu ustalić, np. 
+		- Albo: samemu ustalić, np.
+			,
 		  "ConnectionStrings": {
 			"DbConnection": "Server=MAREK\\SQLEXPRESS; Database=MyDb;Encrypt=False;  Trusted_Connection=True;"
 		  }
+		- do Dockera:
+			,
+		  "ConnectionStrings": {
+			"MyDb": "Server=localhost, 1433; Database=MyDb;User Id=sa; Password=yourStrong(!)Password; TrustServerCertificate=True; "
+		  },
 		  
 4. Utworzyć encje w folderze Entites z ustalonymi polami
 
@@ -41,19 +47,62 @@ WEB API krok po kroku:
 		- w protected override void OnModelCreating(ModelBuilder modelBuilder){
 			modelBuilder.Entity<Model>().Property(x => x.Prop).IsRequired().HasMaxLength(25);} //itp
 		- można zrobić:
-            base.OnModelCreating(modelBuilder);
-			modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly);
+			- w OnModelCreating:
+				protected override void OnModelCreating(ModelBuilder modelBuilder)
+				{
+					base.OnModelCreating(modelBuilder);
+
+					modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly);
+				}
 			- i wtedy stworzyć nowe klasy typu
 				public class WorkerConfiguration : IEntityTypeConfiguration<Worker>
 				{
 					public void Configure(EntityTypeBuilder<Worker> builder)
 					{
 						builder.HasKey(w => w.Id);
-
+							
+				// przykład: jeden do wielu						
 						builder
 							.HasOne(w => w.Department)
 							.WithMany(d => d.Workers)
 							.HasForeignKey(w => w.DepartmentId);
+				
+				// przykład: wiele do wielu
+						builder.HasMany(n => n.NotesGroups)
+							.WithMany(ng => ng.Notes);
+							
+				// przykład: wiele do wielu, rozszerzone na klasę z dodatkowymi polami
+						builder.HasMany(n => n.Users)
+							.WithMany(u => u.Notes)
+							.UsingEntity<UsersNotes>(
+								x => x.HasOne(un => un.User)
+									.WithMany()
+									.HasForeignKey(un => un.UserId),
+
+								x => x.HasOne(un => un.Note)
+									.WithMany()
+									.HasForeignKey(un => un.NoteId),
+
+								x =>
+								{
+									x.HasKey(un => new { un.UserId, un.NoteId });
+									//x.Property(un => un.Role).HasDefaultValue(UserNoteRole.Viewer);
+								}
+
+							);
+							
+						//gdzie UserNotes.cs:
+						/*
+						    public class UsersNotes
+							{
+								public User User { get; set; }
+								public int UserId { get; set; }
+								public Note Note { get; set; }
+								public int NoteId { get; set; }
+
+								public UserNoteRole Role { get; set; }
+							}
+						*/
 						
 						builder.Property(w => w.FirstName).HasMaxLength(30);
 						builder.Property(w => w.LastName).HasMaxLength(30);
@@ -566,3 +615,21 @@ BONUSY (tematy niezwiązane bezpośrednio z żadnym konkretnym etapem):
 	- trzeba dodać na samym początku (przed app.UseStaticFiles()): app.UseResponseCaching();
 	- następnie na daną metodę nałożyć adnotację typu: [ResponseCache(Duration = 1200, VaryByQueryKeys = new[] {"fileName"})]
 	- można ustawić m.in. czas trwania cachowania 
+	
+4. Ustawienie połączenia z bazą w Dockerze:
+	- pobrać obraz MSSQL z Docker Hub
+	- uruchomić kontener:
+		- docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=yourStrong(!)Password" -p 1433:1433 -d 9e28
+		- gdzie 9e28 to przykładowy początek identyfikatora pobranego obrazu
+		- muszą być " a nie ' bo wtedy nie działa
+	- ConnectionString:
+		,
+	  "ConnectionStrings": {
+		"MyDb": "Server=localhost, 1433; Database=MyDb;User Id=sa; Password=yourStrong(!)Password; TrustServerCertificate=True; "
+	  },
+	
+	
+	
+	
+	
+	
